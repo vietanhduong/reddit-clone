@@ -4,7 +4,7 @@ import (
 	"math"
 	"sort"
 
-	"redit-clone/server/common"
+	"reddit-clone/server/common"
 )
 
 type (

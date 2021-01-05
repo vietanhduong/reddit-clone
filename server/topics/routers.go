@@ -6,8 +6,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"redit-clone/server/common"
-	"redit-clone/server/handler"
+	"reddit-clone/server/common"
+	"reddit-clone/server/handler"
 )
 
 type (

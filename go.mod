@@ -1,4 +1,4 @@
-module redit-clone
+module reddit-clone
 
 go 1.15
 

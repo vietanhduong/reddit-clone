@@ -11,9 +11,9 @@ import (
 	"github.com/labstack/echo/v4"
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
 
-	"redit-clone/server/handler"
-	"redit-clone/server/topics"
-	"redit-clone/server/users"
+	"reddit-clone/server/handler"
+	"reddit-clone/server/topics"
+	"reddit-clone/server/users"
 )
 
 func main() {
@@ -40,7 +40,7 @@ func main() {
 }
 
 func RegisterClient(e *echo.Echo) {
-	box := rice.MustFindBox("../client/build")
+	box := rice.MustFindBox("./client/build")
 	client := http.FileServer(box.HTTPBox())
 	e.GET("/static/*", echo.WrapHandler(client))
 	e.GET("/*", func(c echo.Context) error {

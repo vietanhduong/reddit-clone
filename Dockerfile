@@ -16,17 +16,23 @@ FROM golang:1.14 as builder
 
 WORKDIR /server
 
-COPY go.mod .
-
-RUN go mod download
-
 COPY server/ .
 
 RUN mkdir -p /client
 
 COPY --from=frontend /client/build /client/build
 
-RUN GO111MODULE=off go get github.com/GeertJohan/go.rice github.com/GeertJohan/go.rice/rice && \
+WORKDIR /
+
+COPY go.mod .
+
+COPY go.sum .
+
+RUN go mod download
+
+COPY main.go main.go
+
+RUN go get github.com/GeertJohan/go.rice github.com/GeertJohan/go.rice/rice && \
     rice embed-go && \
     CGO_ENABLED=0 GOOS=linux go build -o app .
 
@@ -35,7 +41,7 @@ FROM alpine:3.6
 
 RUN apk add --no-cache ca-certificates
 
-COPY --from=builder /server/app /go/bin/app
+COPY --from=builder /app /go/bin/app
 
 EXPOSE 8080
 

@@ -7,7 +7,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 
-	"redit-clone/server/common"
+	"reddit-clone/server/common"
 )
 
 type (

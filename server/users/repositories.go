@@ -1,6 +1,6 @@
 package users
 
-import "redit-clone/server/common"
+import "reddit-clone/server/common"
 
 type (
 	Repository struct {
