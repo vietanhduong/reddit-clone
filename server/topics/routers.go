@@ -15,7 +15,7 @@ type (
 		GetTopicById(id int) (*Topic, error)
 		CreateTopic(topic *Topic) (*Topic, error)
 		Fetch() []*Topic
-		Vote(id int, up bool) error
+		Vote(id int, up bool) (*Vote, error)
 	}
 
 	ServerImpl struct {
@@ -33,8 +33,8 @@ func RegisterAPI(api *echo.Group) {
 	topicEndpoints.GET("", server.home)
 	topicEndpoints.POST("", server.create, handler.IsLoggedIn, handler.IsAdmin)
 	topicEndpoints.GET("/:id", server.detail)
-	topicEndpoints.GET("/:id/upvote", server.upvote, handler.IsLoggedIn)
-	topicEndpoints.GET("/:id/downvote", server.downvote, handler.IsLoggedIn)
+	topicEndpoints.POST("/:id/upvote", server.upvote, handler.IsLoggedIn)
+	topicEndpoints.POST("/:id/downvote", server.downvote, handler.IsLoggedIn)
 
 }
 
@@ -87,8 +87,12 @@ func (s *ServerImpl) downvote(ctx echo.Context) error {
 }
 
 func (s *ServerImpl) vote(ctx echo.Context, id int, up bool) error {
-	if err := s.topicSrv.Vote(id, up); err != nil {
+	vote, err := s.topicSrv.Vote(id, up)
+	if err != nil {
 		return err
 	}
-	return ctx.NoContent(http.StatusNoContent)
+	return ctx.JSON(http.StatusOK, &common.Response{
+		Code:    http.StatusOK,
+		Content: vote,
+	})
 }

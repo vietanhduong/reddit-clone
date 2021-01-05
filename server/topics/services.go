@@ -12,8 +12,8 @@ type (
 		FindByID(id int) *Topic
 		First10() []*Topic
 		Insert(topic *Topic) *Topic
-		UpVote(id int) bool
-		DownVote(id int) bool
+		UpVote(id int) *Vote
+		DownVote(id int) *Vote
 	}
 	ServiceImpl struct {
 		topicRepo TopicRepository
@@ -47,17 +47,17 @@ func (s *ServiceImpl) Fetch() []*Topic {
 	return s.topicRepo.First10()
 }
 
-func (s *ServiceImpl) Vote(id int, up bool) error {
-	var success bool
-	vote := "down"
+func (s *ServiceImpl) Vote(id int, up bool) (*Vote, error) {
+	var vote *Vote
+	v := "down"
 	if up {
-		success = s.topicRepo.UpVote(id)
-		vote = "up"
+		vote = s.topicRepo.UpVote(id)
+		v = "up"
 	} else {
-		success = s.topicRepo.DownVote(id)
+		vote = s.topicRepo.DownVote(id)
 	}
-	if !success {
-		return common.HttpError(http.StatusBadRequest, fmt.Sprintf("%svote failed maybe topic does not exist", vote))
+	if common.IsNil(vote) {
+		return nil, common.HttpError(http.StatusBadRequest, fmt.Sprintf("%svote failed maybe topic does not exist", v))
 	}
-	return nil
+	return vote, nil
 }

@@ -51,20 +51,20 @@ func (r *Repository) Insert(topic *Topic) *Topic {
 	return topic
 }
 
-func (r *Repository) UpVote(id int) bool {
+func (r *Repository) UpVote(id int) *Vote {
 	topic, found := r.topics[id]
 	if !found {
-		return false
+		return nil
 	}
 	topic.UpVote++
-	return true
+	return &Vote{UpVote: topic.UpVote, DownVote: topic.DownVote}
 }
 
-func (r *Repository) DownVote(id int) bool {
+func (r *Repository) DownVote(id int) *Vote {
 	topic, found := r.topics[id]
 	if !found {
-		return false
+		return nil
 	}
 	topic.DownVote++
-	return true
+	return &Vote{UpVote: topic.UpVote, DownVote: topic.DownVote}
 }
