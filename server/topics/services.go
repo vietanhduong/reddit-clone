@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/vietanhduong/reddit-clone/server/common"
+	"redit-clone/server/common"
 )
 
 type (

@@ -6,8 +6,8 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 
-	"github.com/vietanhduong/reddit-clone/server/common"
-	"github.com/vietanhduong/reddit-clone/server/handler"
+	"redit-clone/server/common"
+	"redit-clone/server/handler"
 )
 
 type (

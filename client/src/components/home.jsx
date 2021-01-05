@@ -14,7 +14,7 @@ const Home = () => {
             <hr />
             <h1>Topics</h1>
             <hr />
-            {topics.map(topic => (<Topic key={topic.id} topic={topic} />))}
+            {topics && topics.map(topic => (<Topic key={topic.id} topic={topic} />))}
         </div>
     );
 };
