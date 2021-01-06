@@ -2,7 +2,6 @@ package topics
 
 import (
 	"container/heap"
-	"errors"
 )
 
 type PriorityQueue struct {
@@ -21,32 +20,32 @@ func (p *PriorityQueue) Len() int {
 	return p.itemHeap.Len()
 }
 
-func (p *PriorityQueue) Insert(v Vote, priority int) {
-	_, ok := p.lookup[v.ID]
+func (p *PriorityQueue) Insert(topic *Topic, priority int) {
+	_, ok := p.lookup[topic.ID]
 	if ok {
 		return
 	}
 
 	newItem := &item{
-		value:    v,
+		topic:    topic,
 		priority: priority,
 	}
 	heap.Push(p.itemHeap, newItem)
-	p.lookup[v.ID] = newItem
+	p.lookup[topic.ID] = newItem
 }
 
-func (p *PriorityQueue) Pop() (interface{}, error) {
+func (p *PriorityQueue) Pop() *Topic {
 	if len(*p.itemHeap) == 0 {
-		return nil, errors.New("empty queue")
+		return nil
 	}
 
 	item := heap.Pop(p.itemHeap).(*item)
-	delete(p.lookup, item.value.ID)
-	return item.value, nil
+	delete(p.lookup, item.topic.ID)
+	return item.topic
 }
 
-func (p *PriorityQueue) UpdatePriority(voteID int, newPriority int) {
-	item, ok := p.lookup[voteID]
+func (p *PriorityQueue) UpdatePriority(topicID int, newPriority int) {
+	item, ok := p.lookup[topicID]
 	if !ok {
 		return
 	}
@@ -58,7 +57,7 @@ func (p *PriorityQueue) UpdatePriority(voteID int, newPriority int) {
 type itemHeap []*item
 
 type item struct {
-	value    Vote
+	topic    *Topic
 	priority int
 	index    int
 }

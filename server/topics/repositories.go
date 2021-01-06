@@ -8,68 +8,65 @@ type (
 	Repository struct {
 		// Implement your database in here
 		// In this project I just use seed data
-		topics map[int]*Topic
-		votes  PriorityQueue
+		topics PriorityQueue
 	}
 )
 
 func NewRepository() *Repository {
-	votes := New()
-	return &Repository{
-		topics: make(map[int]*Topic),
-		votes:  votes,
-	}
+	topics := New()
+	return &Repository{topics: topics}
 }
 
 func (r *Repository) FindByID(id int) *Topic {
-	if topic, found := r.topics[id]; found {
-		return topic
+	if item, found := r.topics.lookup[id]; found {
+		return item.topic
 	}
 	return nil
 }
 
 func (r *Repository) First10() []*Topic {
 	var topics []*Topic
-	size := common.Min(r.votes.Len(), 10)
-	for _, v := range (*r.votes.itemHeap)[:size] {
-		topics = append(topics, r.topics[v.value.ID])
+	size := common.Min(r.topics.Len(), 10)
+	for size > 0 {
+		topic := r.topics.Pop()
+		topics = append(topics, topic)
+		size--
+	}
+	for _, t := range topics {
+		r.topics.Insert(t, t.UpVote-t.DownVote)
 	}
 	return topics
 }
 
 func (r *Repository) Insert(topic *Topic) *Topic {
-	topic.ID = len(r.topics)
-	r.topics[topic.ID] = topic
-	vote := Vote{
-		ID: topic.ID,
-	}
-	r.votes.Insert(vote, 0)
+	topic.ID = len(r.topics.lookup) + 1
+	r.topics.Insert(topic, 0)
 	return topic
 }
 
 func (r *Repository) UpVote(id int) *Vote {
-	topic, found := r.topics[id]
+	item, found := r.topics.lookup[id]
 	if !found {
 		return nil
 	}
-	topic.UpVote++
-	return r.updateVote(topic)
+	item.topic.UpVote++
+	return r.updateVote(item)
 }
 
 func (r *Repository) DownVote(id int) *Vote {
-	topic, found := r.topics[id]
+	item, found := r.topics.lookup[id]
 	if !found {
 		return nil
 	}
-	topic.DownVote++
-	return r.updateVote(topic)
+	item.topic.DownVote++
+	return r.updateVote(item)
 }
 
-func (r *Repository) updateVote(topic *Topic) *Vote {
-	r.votes.UpdatePriority(topic.ID, topic.UpVote-topic.DownVote)
+func (r *Repository) updateVote(i *item) *Vote {
+	r.topics.UpdatePriority(i.topic.ID, i.topic.UpVote-i.topic.DownVote)
 	return &Vote{
-		ID:       topic.ID,
-		UpVote:   topic.UpVote,
-		DownVote: topic.DownVote,
+		ID:       i.topic.ID,
+		UpVote:   i.topic.UpVote,
+		DownVote: i.topic.DownVote,
 	}
 }
