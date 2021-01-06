@@ -7,19 +7,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type (
-	Pair struct {
-		Key   int
-		Value int
-	}
-	Pairs []Pair
-)
-
-// Reference: https://golang.org/pkg/sort/#Interface
-func (p Pairs) Len() int           { return len(p) }
-func (p Pairs) Less(i, j int) bool { return p[j].Value < p[i].Value }
-func (p Pairs) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
-
 func IsNil(i interface{}) bool {
 	return i == nil || reflect.ValueOf(i).IsNil()
 }
@@ -40,4 +27,11 @@ func HttpError(code int, message interface{}) *echo.HTTPError {
 		Code:    code,
 		Message: message,
 	}
+}
+
+func Min(x, y int) int {
+	if x > y {
+		return y
+	}
+	return x
 }

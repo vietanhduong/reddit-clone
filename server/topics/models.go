@@ -9,6 +9,7 @@ type (
 	}
 
 	Vote struct {
+		ID int `json:"id"`
 		UpVote int `json:"up_vote"`
 		DownVote int `json:"down_vote"`
 	}
