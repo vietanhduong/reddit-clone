@@ -1,6 +1,5 @@
 # Reddit clone
 A simple project emulate reddit's *vote function*
-## Table of contents
 
 ## Prerequisite
 You can start it by 2 ways using **docker** or **without docker**.
